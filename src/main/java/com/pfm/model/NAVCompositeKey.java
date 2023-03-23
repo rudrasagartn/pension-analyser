@@ -25,7 +25,7 @@ public class NAVCompositeKey implements Serializable {
 	private Date navDate;
 	@Getter
 	@Setter
-	@Column(name = "SCHEME_ID")
+	@Column(name = "scheme_id")
 	private String scheme_id;
 
 }

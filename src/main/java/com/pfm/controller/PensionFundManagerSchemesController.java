@@ -12,7 +12,7 @@ import com.pfm.converter.IPFMSchemeConverter;
 import com.pfm.dto.PensionFundManagerSchemesDTO;
 import com.pfm.service.IPensionFundManagerSchemesService;
 
-@RestController(value = "/schemes")
+@RestController
 public class PensionFundManagerSchemesController extends BaseController implements IPFMSchemeConverter {
 
 	@Autowired

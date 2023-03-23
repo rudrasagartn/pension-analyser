@@ -31,6 +31,7 @@ public class ImportDataController extends BaseController implements IImportDataC
 
 	@GetMapping("/importPFMData")
 	public void importData() {
+		long start = System.currentTimeMillis();
 		String baseUrl = getURL("base");
 		
 		String pfmsURL = baseUrl + getURL("pfms");
@@ -47,6 +48,9 @@ public class ImportDataController extends BaseController implements IImportDataC
 		
 		List<NetAssetValueDTO> navs= getLatestNAV(navURL,  restTemplate);
 		iNetAssetValueService.save(navs);
+		
+		long duration = System.currentTimeMillis() - start;
+		System.out.println("Duration took of Import : "+duration);
 	}
 	
 	

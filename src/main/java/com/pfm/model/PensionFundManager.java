@@ -12,13 +12,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @ToString
-@Entity(name = "PFM")
+@Entity(name = "pfm")
 public class PensionFundManager {
 
 	@Getter
 	@Setter
 	@Id
-	@Column(name = "id")
+	@Column(name = "pfm_id")
 	private String id;
 	@Getter
 	@Setter

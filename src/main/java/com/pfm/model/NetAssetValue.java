@@ -15,14 +15,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @ToString
-@Entity(name = "NAV")
+@Entity(name = "nav")
 public class NetAssetValue implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Getter
 	@Setter
-	@Column(name = "NAV")
+	@Column(name = "nav")
 	private BigDecimal nav;
 
 	@Getter
