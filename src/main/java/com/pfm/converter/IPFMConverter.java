@@ -18,7 +18,8 @@ public interface IPFMConverter extends IBaseConverter{
 	//ModelMapper modelMapper = new ModelMapper();
 
 	/**
-	 * Convert JSONArray to List of PensionFundManagerDTO
+	 * Function Interface Implementation to Convert JSONArray to List of
+	 * PensionFundManagerDTO
 	 */
 	@SuppressWarnings("unchecked")
 	Function<JSONArray, List<PensionFundManagerDTO>> getPensionFundManagerDTOList = (responseArray) -> {

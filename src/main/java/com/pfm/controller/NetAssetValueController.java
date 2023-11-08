@@ -29,7 +29,7 @@ public class NetAssetValueController extends BaseController implements INAVConve
 		String url = getURL("base") + getURL("latest");
 		List<NetAssetValueDTO> navDTOs = getLatestNAV(url, restTemplate);
 		Boolean saved = iNetAssetValueService.save(navDTOs);
-		return new ResponseEntity<String>(saved + "", HttpStatus.OK);
+		return new ResponseEntity<>(saved + "", HttpStatus.OK);
 	}
 	
 	@GetMapping("/today")
