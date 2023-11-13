@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pfm.converter.INAVConverter;
 import com.pfm.dto.NetAssetValueDTO;
+import com.pfm.model.NetAssetValue;
 import com.pfm.service.INetAssetValueService;
 
 @RestController
-@RequestMapping("nav")
+@RequestMapping("/nps/nav")
 public class NetAssetValueController extends BaseController implements INAVConverter {
 
 	/*
@@ -29,13 +30,14 @@ public class NetAssetValueController extends BaseController implements INAVConve
 		String url = getURL("base") + getURL("latest");
 		List<NetAssetValueDTO> navDTOs = getLatestNAV(url, restTemplate);
 		Boolean saved = iNetAssetValueService.save(navDTOs);
-		return new ResponseEntity<String>(saved + "", HttpStatus.OK);
+		return new ResponseEntity<>(saved + "", HttpStatus.OK);
 	}
 	
 	@GetMapping("/today")
-	public ResponseEntity<NetAssetValueDTO> getLatestNAV() {
-		NetAssetValueDTO assetValueDTO = iNetAssetValueService.getLatestNAV();
-		return new ResponseEntity<NetAssetValueDTO>(assetValueDTO, HttpStatus.OK);
+	public ResponseEntity<List<NetAssetValueDTO>> getLatestNAV() {
+		List<NetAssetValue> assetValueDTO = iNetAssetValueService.getLatestNAV();
+		List<NetAssetValueDTO> dtos = convertToDtos.apply(assetValueDTO);
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 
 }

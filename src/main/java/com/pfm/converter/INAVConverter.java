@@ -103,7 +103,12 @@ public interface INAVConverter extends IBaseConverter {
 	/**
 	 * Convert Entity to DTO for PensionFundManager
 	 */
-	Function<NetAssetValue, NetAssetValueDTO> convertToDto = (model) -> modelMapper.map(model, NetAssetValueDTO.class);
+	Function<NetAssetValue, NetAssetValueDTO> convertToDto = (model) -> {
+		modelMapper2.typeMap(NetAssetValue.class, NetAssetValueDTO.class)
+				.addMapping(src -> src.getNavCompositeKey().getNavDate(), NetAssetValueDTO::setDate)
+				.addMapping(src -> src.getNavCompositeKey().getScheme_id(), NetAssetValueDTO::setScheme_id);
+		return modelMapper2.map(model, NetAssetValueDTO.class);
+	};
 	/**
 	 * Convert List<Entity> to List<DTO> for PensionFundManager
 	 */

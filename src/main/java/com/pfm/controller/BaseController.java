@@ -1,10 +1,5 @@
 package com.pfm.controller;
 
-import java.util.function.Function;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +16,12 @@ public class BaseController {
 		return env.getProperty(key);
 	}
 
+
+	public BaseController() {
+		super();
+		
+	}
+
 	/*
 	 * Function<String, JSONArray> processResponse = (data) -> { JSONArray response
 	 * = null; try { JSONParser jsonParserObj = new JSONParser(); JSONObject jsonObj
@@ -28,5 +29,7 @@ public class BaseController {
 	 * jsonObj.get("data"); } catch (Exception e) { e.printStackTrace(); } return
 	 * response; };
 	 */
+	
+	
 
 }

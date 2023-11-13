@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pfm.converter.IImportDataConverter;
@@ -18,6 +19,7 @@ import com.pfm.service.IPFMService;
 import com.pfm.service.IPensionFundManagerSchemesService;
 
 @RestController
+@RequestMapping("/nps/import")
 public class ImportDataController extends BaseController implements IImportDataConverter {
 	
 	@Autowired
@@ -59,12 +61,12 @@ public class ImportDataController extends BaseController implements IImportDataC
 		List<PensionFundManagerSchemesDTO> schemes = iPensionFundManagerSchemesService.getAll();
 		List<PensionFundManagerSchemes> schemes2=convertToPFMSModelList.apply(schemes);
 		for (PensionFundManagerSchemes scheme : schemes2) {
-			String scheme_id =scheme.getId();
+			String schemeId =scheme.getId();
 			String baseUrl = getURL("base");
 			String schemeNavUrl = getURL("schemenav");
-			schemeNavUrl = schemeNavUrl.replaceAll("SCHEME_ID", scheme_id);
+			schemeNavUrl = schemeNavUrl.replaceAll("SCHEME_ID", schemeId);
 			String url = baseUrl+schemeNavUrl;
-			List<NetAssetValueDTO> response = getLatestNAV(url, scheme_id,restTemplate);
+			List<NetAssetValueDTO> response = getLatestNAV(url, schemeId,restTemplate);
 			responseAll.add(response);
 		}
 		List<NetAssetValueDTO> navs=responseAll.stream().flatMap(List::stream).collect(Collectors.toList());
