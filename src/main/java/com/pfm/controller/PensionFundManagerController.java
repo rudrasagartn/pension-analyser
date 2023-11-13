@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pfm.converter.IPFMConverter;
@@ -14,6 +15,7 @@ import com.pfm.dto.PensionFundManagerDTO;
 import com.pfm.service.IPFMService;
 
 @RestController
+@RequestMapping("/nps/pfm")
 public class PensionFundManagerController extends BaseController implements IPFMConverter {
 
 	
@@ -31,7 +33,7 @@ public class PensionFundManagerController extends BaseController implements IPFM
 	@GetMapping("/getAll")
 	public ResponseEntity<List<PensionFundManagerDTO>> getAll() {
 		List<PensionFundManagerDTO> responseList = ipfmService.getAll();
-		return new ResponseEntity<List<PensionFundManagerDTO>>(responseList, HttpStatus.OK);
+		return new ResponseEntity<>(responseList, HttpStatus.OK);
 	}
 
 	@GetMapping("/getPFMS")

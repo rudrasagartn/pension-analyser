@@ -23,7 +23,7 @@ public class PensionFundManagerSchemesServiceImpl implements IPensionFundManager
 	public Boolean save(List<PensionFundManagerSchemesDTO> schemesDTOList) {
 		List<PensionFundManagerSchemes> convertedList = convertToPFMSModelList.apply(schemesDTOList);
 		List<PensionFundManagerSchemes> savedList = ipfmsDao.saveAll(convertedList);
-		return convertedList.size() == savedList.size() ? true : false;
+		return convertedList.size() == savedList.size();
 	}
 
 	@Override

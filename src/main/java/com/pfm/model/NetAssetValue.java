@@ -7,26 +7,22 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+@Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-@ToString
 @Entity(name = "nav")
 public class NetAssetValue implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Getter
-	@Setter
+	
 	@Column(name = "nav")
 	private BigDecimal nav;
 
-	@Getter
-	@Setter
+	
 	@EmbeddedId
 	NAVCompositeKey navCompositeKey;
 

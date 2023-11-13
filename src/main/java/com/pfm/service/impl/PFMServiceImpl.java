@@ -20,7 +20,7 @@ public class PFMServiceImpl implements IPFMService {
 	public boolean save(List<PensionFundManagerDTO> pfmDtoList) {
 		List<PensionFundManager> list = convertToModels.apply(pfmDtoList);
 		List<PensionFundManager> responseList = dao.saveAll(list);
-		return list.size() == responseList.size() ? true : false;
+		return list.size() == responseList.size() ;
 	}
 
 	@Override
