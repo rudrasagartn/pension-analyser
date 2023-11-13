@@ -34,7 +34,6 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 
 	@Override
 	public List<NetAssetValue> getLatestNAV() {
-		// TODO Auto-generated method stub
 		Date date = yesterday();
 		List<NetAssetValue> navs=dao.findByDate(date);
 		
