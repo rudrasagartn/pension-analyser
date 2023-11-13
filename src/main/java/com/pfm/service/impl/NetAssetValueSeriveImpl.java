@@ -15,6 +15,7 @@ import com.pfm.dao.INetAssetValueDao;
 import com.pfm.dto.NetAssetValueDTO;
 import com.pfm.model.NetAssetValue;
 import com.pfm.service.INetAssetValueService;
+import com.pfm.util.Utils;
 
 @Service
 public class NetAssetValueSeriveImpl implements INetAssetValueService {
@@ -33,8 +34,8 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 	}
 
 	@Override
-	public List<NetAssetValue> getLatestNAV() {
-		Date date = yesterday();
+	public List<NetAssetValue> getLatestNAV(int howManyDays) {
+		Date date = Utils.getPreviousDays(howManyDays);//yesterday();
 		List<NetAssetValue> navs=dao.findByDate(date);
 		
 		return navs;

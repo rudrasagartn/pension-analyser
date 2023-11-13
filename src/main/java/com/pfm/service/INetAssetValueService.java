@@ -10,6 +10,6 @@ public interface INetAssetValueService extends INAVConverter{
 
 	Boolean save(List<NetAssetValueDTO> navDTOs);
 
-	List<NetAssetValue> getLatestNAV();
+	List<NetAssetValue> getLatestNAV(int howManyDays);
 
 }
