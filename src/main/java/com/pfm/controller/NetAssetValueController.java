@@ -19,10 +19,6 @@ import com.pfm.service.INetAssetValueService;
 @RequestMapping("/nps/nav")
 public class NetAssetValueController extends BaseController implements INAVConverter {
 
-	/*
-	 * @Autowired RestTemplate restTemplate;
-	 */
-
 	@Autowired
 	INetAssetValueService iNetAssetValueService;
 

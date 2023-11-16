@@ -1,8 +1,5 @@
 package com.pfm.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,12 +32,10 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 
 	@Override
 	public List<NetAssetValue> getLatestNAV(int howManyDays) {
-		Date date = Utils.getPreviousDays(howManyDays);//yesterday();
-		List<NetAssetValue> navs=dao.findByDate(date);
-		
-		return navs;
+		Date date = Utils.getPreviousDays(howManyDays);
+		return dao.findByDate(date);
 	}
-	private Date yesterday() {
+	/*private Date yesterday() {
 		
 		Date date = null;
 	    final Calendar cal = Calendar.getInstance();
@@ -56,5 +51,5 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 			e.printStackTrace();
 		}
 	    return date;
-	}
+	}*/
 }
