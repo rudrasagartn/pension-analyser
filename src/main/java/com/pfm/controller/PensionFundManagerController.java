@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,23 @@ public class PensionFundManagerController extends BaseController implements IPFM
 		dtoList.forEach((obj) -> System.out.println("DTO : " + obj));
 		ipfmService.save(dtoList); // seperate this to computableFuture
 	}
+	
+	@GetMapping("/getByName")
+	public ResponseEntity<PensionFundManagerDTO> getByName(@Param(value = "name") String name){
+		return new ResponseEntity<>(ipfmService.findByName(name),HttpStatus.OK);
+	}
+	
+	@GetMapping("/getByNameLike")
+	public ResponseEntity<List<PensionFundManagerDTO>> getByNameLike(@Param(value = "name") String name){
+		return new ResponseEntity<>(ipfmService.findByNameLike(name),HttpStatus.OK);
+	}
+	
+	@GetMapping("/getById")
+	public ResponseEntity<PensionFundManagerDTO> getById(@Param(value = "id") String id){
+		return new ResponseEntity<>(ipfmService.findById(id),HttpStatus.OK);
+	}
 
+	@Override
 	public String getURL(String key) {
 		return env.getProperty(key);
 	}

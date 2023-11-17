@@ -47,7 +47,6 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 	    try {
 			date= simpleDateFormat.parse(simpleDateFormat.format(cal.getTime()));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    return date;
