@@ -1,4 +1,4 @@
-package com.pa;
+package com.pfm;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

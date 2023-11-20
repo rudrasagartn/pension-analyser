@@ -26,5 +26,16 @@ public class CustomExceptionAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
+	
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<Object> handelResourceNotFoundException(ResourceNotFoundException e){
+
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("timestamp", LocalDateTime.now());
+		body.put("message", e.getMessage());
+
+		return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+		
+	}
 
 }

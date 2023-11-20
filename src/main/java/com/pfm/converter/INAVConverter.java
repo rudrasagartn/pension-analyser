@@ -27,45 +27,45 @@ public interface INAVConverter extends IBaseConverter {
 	public default List<NetAssetValueDTO> getLatestNAV(String url, RestTemplate restTemplate) {
 
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		List<NetAssetValueDTO> navDTOs = processResponse.andThen(getNetAssetValueDTOList).apply(response.getBody());
-		return navDTOs;
+		return processResponse.andThen(getNetAssetValueDTOList).apply(response.getBody());
 	}
 
 	@SuppressWarnings("unchecked")
-	Function<JSONArray, List<NetAssetValueDTO>> getNetAssetValueDTOList = (responseArray) -> {
+	Function<JSONArray, List<NetAssetValueDTO>> getNetAssetValueDTOList = responseArray -> {
 
 		List<NetAssetValueDTO> list = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
-		responseArray.stream().forEach((arrayItem) -> {
+		responseArray.stream().forEach(arrayItem -> {
 			try {
 				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
 				list.add(dto);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 		return list;
 	};
 	
-	public default List<NetAssetValueDTO> getLatestNAV(String url, String scheme_id,RestTemplate restTemplate) {
+	public default List<NetAssetValueDTO> getLatestNAV(String url, String schemeId,RestTemplate restTemplate) {
 
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		JSONArray arrayData = processResponse.apply(response.getBody());
 		
-		List<NetAssetValueDTO> navDTOs = getNetAssetValueDTOLists.apply(arrayData, scheme_id);
-		return navDTOs;
+		return getNetAssetValueDTOLists.apply(arrayData, schemeId);
 	}
 
 	@SuppressWarnings("unchecked")
-	BiFunction<JSONArray, String, List<NetAssetValueDTO>> getNetAssetValueDTOLists = (responseArray, scheme_id) -> {
+	BiFunction<JSONArray, String, List<NetAssetValueDTO>> getNetAssetValueDTOLists = (responseArray, schemeId) -> {
 
 		List<NetAssetValueDTO> list = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
-		responseArray.stream().forEach((arrayItem) -> {
+		responseArray.stream().forEach(arrayItem -> {
 			try {
 				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
-				dto.setScheme_id(scheme_id);
+				dto.setScheme_id(schemeId);
 				list.add(dto);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 		return list;
@@ -74,13 +74,7 @@ public interface INAVConverter extends IBaseConverter {
 	/**
 	 * Convert DTO to Entity for PensionFundManager
 	 */
-	Function<NetAssetValueDTO, NetAssetValue> convertToModel = (dto) -> {
-		/*
-		 * modelMapper2.addMappings(new PropertyMap<NetAssetValueDTO, NetAssetValue>() {
-		 * 
-		 * @Override protected void configure() { map().setNavCompositeKey(new
-		 * NAVCompositeKey(source.getDate(),source.getScheme_id())); } });
-		 */
+	Function<NetAssetValueDTO, NetAssetValue> convertToModel = dto -> {
 		NetAssetValue navAssetValue = null;
 		try {
 			dateFormat.parse(dateFormat.format(dto.getDate()));
@@ -88,7 +82,7 @@ public interface INAVConverter extends IBaseConverter {
 			navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
 			navAssetValue.setNavCompositeKey(navCompositeKey);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return navAssetValue;
 	};
@@ -96,14 +90,14 @@ public interface INAVConverter extends IBaseConverter {
 	 * Convert List<DTO> to List<Entity> for PensionFundManager
 	 */
 	
-	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels = (dtos) -> dtos.stream()
-			.map((dto) -> convertToModel.apply(dto)).collect(Collectors.toList());
+	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels = dtos -> dtos.stream()
+			.map(dto -> convertToModel.apply(dto)).collect(Collectors.toList());
 	 
 
 	/**
 	 * Convert Entity to DTO for PensionFundManager
 	 */
-	Function<NetAssetValue, NetAssetValueDTO> convertToDto = (model) -> {
+	Function<NetAssetValue, NetAssetValueDTO> convertToDto = model -> {
 		modelMapper2.typeMap(NetAssetValue.class, NetAssetValueDTO.class)
 				.addMapping(src -> src.getNavCompositeKey().getNavDate(), NetAssetValueDTO::setDate)
 				.addMapping(src -> src.getNavCompositeKey().getScheme_id(), NetAssetValueDTO::setScheme_id);
@@ -112,10 +106,10 @@ public interface INAVConverter extends IBaseConverter {
 	/**
 	 * Convert List<Entity> to List<DTO> for PensionFundManager
 	 */
-	Function<List<NetAssetValue>, List<NetAssetValueDTO>> convertToDtos = (models) -> models.stream()
-			.map((model) -> convertToDto.apply(model)).collect(Collectors.toList());
+	Function<List<NetAssetValue>, List<NetAssetValueDTO>> convertToDtos = models -> models.stream()
+			.map(model -> convertToDto.apply(model)).collect(Collectors.toList());
 
-	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels2 = (navDTOs) -> navDTOs.stream()
-			.map((dto) -> new NetAssetValue(dto.getNav(), new NAVCompositeKey(dto.getDate(), dto.getScheme_id())))
+	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels2 = navDTOs -> navDTOs.stream()
+			.map(dto -> new NetAssetValue(dto.getNav(), new NAVCompositeKey(dto.getDate(), dto.getScheme_id())))
 			.collect(Collectors.toList());
 }
