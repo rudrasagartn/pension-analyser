@@ -3,9 +3,11 @@ package com.pfm.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.pfm.dao.IPensionFundManagerSchemesDAO;
+import com.pfm.dao.IPensionFundManagerSchemesDAOJdbcTemplate;
 import com.pfm.dto.PensionFundManagerSchemesDTO;
 import com.pfm.model.PensionFundManagerSchemes;
 import com.pfm.service.IPensionFundManagerSchemesService;
@@ -15,6 +17,12 @@ public class PensionFundManagerSchemesServiceImpl implements IPensionFundManager
 
 	@Autowired
 	IPensionFundManagerSchemesDAO ipfmsDao;
+	
+	@Autowired
+	IPensionFundManagerSchemesDAOJdbcTemplate ipfmsJdbc;
+	
+	@Autowired
+	Environment environment;
 
 	public PensionFundManagerSchemesServiceImpl() {
 	}
@@ -29,6 +37,29 @@ public class PensionFundManagerSchemesServiceImpl implements IPensionFundManager
 	@Override
 	public List<PensionFundManagerSchemesDTO> getAll() {
 		return convertToPFMSDtoList.apply(ipfmsDao.findAll());
+	}
+
+	@Override
+	public PensionFundManagerSchemesDTO findByName(String pfmsName) {
+		return ipfmsJdbc.findByName(pfmsName);
+	}
+
+	@Override
+	public List<PensionFundManagerSchemesDTO> findByNameLike(String pfmsName) {
+		String sql = environment.getProperty("pfms.findByNameLike");
+		return ipfmsJdbc.executeQuery(sql, "%"+pfmsName+"%");
+	}
+
+	@Override
+	public List<PensionFundManagerSchemesDTO> findSchemesByFundManagerName(String pfmName) {
+		String sql = environment.getProperty("pfms.findSchemesByFundManagerName");
+		return	ipfmsJdbc.executeQuery(sql, pfmName);
+	}
+
+	@Override
+	public List<PensionFundManagerSchemesDTO> findSchemesByFundManagerId(String pfmsId) {
+		String sql = environment.getProperty("pfms.findSchemesByFundManagerId");
+		return	ipfmsJdbc.executeQuery(sql, pfmsId);
 	}
 
 }
