@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pfm.converter.INAVConverter;
 import com.pfm.dto.NetAssetValueDTO;
-import com.pfm.model.NetAssetValue;
 import com.pfm.service.INetAssetValueService;
 
 @RestController
@@ -32,9 +31,22 @@ public class NetAssetValueController extends BaseController implements INAVConve
 	
 	@GetMapping("/today")
 	public ResponseEntity<List<NetAssetValueDTO>> getLatestNAV(@RequestParam int howManyDays) {
-		List<NetAssetValue> assetValueDTO = iNetAssetValueService.getLatestNAV(howManyDays);
-		List<NetAssetValueDTO> dtos = convertToDtos.apply(assetValueDTO);
+		List<NetAssetValueDTO> dtos = iNetAssetValueService.getLatestNAV(howManyDays);
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
+	
+	
+	@GetMapping("/getNAVForScheme")
+	public ResponseEntity<NetAssetValueDTO> getNAVforScheme(@RequestParam String schemeId,@RequestParam String date){
+		NetAssetValueDTO dto=iNetAssetValueService.findNAVforScheme(schemeId,date);
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getNAVForScheme")
+	public ResponseEntity<List<NetAssetValueDTO>> getAllNAVforScheme(@RequestParam String schemeId){
+		List<NetAssetValueDTO> result=iNetAssetValueService.findAllNAVforScheme(schemeId);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+
 
 }

@@ -41,25 +41,32 @@ public class PensionFundManagerSchemesServiceImpl implements IPensionFundManager
 
 	@Override
 	public PensionFundManagerSchemesDTO findByName(String pfmsName) {
-		return ipfmsJdbc.findByName(pfmsName);
+		String sql=environment.getProperty("pfms.findByName");
+		return ipfmsJdbc.fetch(sql,pfmsName);
 	}
 
 	@Override
 	public List<PensionFundManagerSchemesDTO> findByNameLike(String pfmsName) {
 		String sql = environment.getProperty("pfms.findByNameLike");
-		return ipfmsJdbc.executeQuery(sql, "%"+pfmsName+"%");
+		return ipfmsJdbc.fetchRecords(sql, "%"+pfmsName+"%");
 	}
 
 	@Override
 	public List<PensionFundManagerSchemesDTO> findSchemesByFundManagerName(String pfmName) {
 		String sql = environment.getProperty("pfms.findSchemesByFundManagerName");
-		return	ipfmsJdbc.executeQuery(sql, pfmName);
+		return	ipfmsJdbc.fetchRecords(sql, pfmName);
 	}
 
 	@Override
 	public List<PensionFundManagerSchemesDTO> findSchemesByFundManagerId(String pfmsId) {
 		String sql = environment.getProperty("pfms.findSchemesByFundManagerId");
-		return	ipfmsJdbc.executeQuery(sql, pfmsId);
+		return	ipfmsJdbc.fetchRecords(sql, pfmsId);
+	}
+
+	@Override
+	public PensionFundManagerSchemesDTO findById(String pfmsId) {
+		String sql = environment.getProperty("pfms.findById");
+		return	ipfmsJdbc.fetch(sql, pfmsId);
 	}
 
 }

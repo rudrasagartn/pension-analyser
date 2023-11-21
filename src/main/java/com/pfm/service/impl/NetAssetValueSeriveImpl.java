@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.pfm.dao.INetAssetValueCustomDao;
 import com.pfm.dao.INetAssetValueDao;
+import com.pfm.dao.INetAssetValueDaoJdbcTemplate;
 import com.pfm.dto.NetAssetValueDTO;
 import com.pfm.model.NetAssetValue;
 import com.pfm.service.INetAssetValueService;
@@ -21,7 +22,10 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 	INetAssetValueDao daoAssetValue;
 	
 	@Autowired
-	INetAssetValueCustomDao dao;
+	INetAssetValueDaoJdbcTemplate dao;
+	
+	@Autowired
+	Environment environment;
 
 	@Override
 	public Boolean save(List<NetAssetValueDTO> navDTOs) {
@@ -31,24 +35,21 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 	}
 
 	@Override
-	public List<NetAssetValue> getLatestNAV(int howManyDays) {
+	public List<NetAssetValueDTO> getLatestNAV(int howManyDays) {
 		Date date = Utils.getPreviousDays(howManyDays);
-		return dao.findByDate(date);
+		String sql = environment.getProperty("nav.findNavByDate");
+		return dao.queryForList(sql,date);
 	}
-	/*private Date yesterday() {
-		
-		Date date = null;
-	    final Calendar cal = Calendar.getInstance();
-	    cal.add(Calendar.DATE, -7);
-	    
-	    
-	    String pattern = "dd-MM-yyyy HH:mm:ss";
-	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-	    try {
-			date= simpleDateFormat.parse(simpleDateFormat.format(cal.getTime()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	    return date;
-	}*/
+	
+	@Override
+	public NetAssetValueDTO findNAVforScheme(String schemeId, String date) {
+		String sql = environment.getProperty("nav.findNavForScheme");
+		return dao.queryForObject(sql,schemeId,date);
+	}
+
+	@Override
+	public List<NetAssetValueDTO> findAllNAVforScheme(String schemeId) {
+		String sql = environment.getProperty("nav.findAllNavForScheme");
+		return dao.queryForList(sql, schemeId);
+	}
 }

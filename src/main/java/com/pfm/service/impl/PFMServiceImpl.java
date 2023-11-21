@@ -3,6 +3,7 @@ package com.pfm.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.pfm.dao.IPensionFundManagerDao;
@@ -16,15 +17,18 @@ public class PFMServiceImpl implements IPFMService {
 
 	@Autowired
 	private IPensionFundManagerDao dao;
-	
+
 	@Autowired
 	private IPensionFundManagerDaoCustom daoCustom;
+
+	@Autowired
+	Environment environment;
 
 	@Override
 	public boolean save(List<PensionFundManagerDTO> pfmDtoList) {
 		List<PensionFundManager> list = convertToModels.apply(pfmDtoList);
 		List<PensionFundManager> responseList = dao.saveAll(list);
-		return list.size() == responseList.size() ;
+		return list.size() == responseList.size();
 	}
 
 	@Override
@@ -39,13 +43,12 @@ public class PFMServiceImpl implements IPFMService {
 
 	@Override
 	public PensionFundManagerDTO findById(String id) {
-		return daoCustom.findById(id);
-		 
+		return daoCustom.queryForObject(environment.getProperty("pfm.findById"), id);
+
 	}
 
 	@Override
 	public List<PensionFundManagerDTO> findByNameLike(String name) {
-		// TODO Auto-generated method stub
-		return daoCustom.findByNameLike(name);
+		return daoCustom.queryForList(environment.getProperty("pfm.findByNameLike"), name);
 	}
 }

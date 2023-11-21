@@ -10,6 +10,9 @@ public interface IPensionFundManagerDaoCustom {
 	public PensionFundManagerDTO findById(String id);
 
 	public List<PensionFundManagerDTO> findByNameLike(String name);
-	
-	
+
+	public List<PensionFundManagerDTO> queryForList(String sql, String param);
+
+	public PensionFundManagerDTO queryForObject(String sql, String param);
+
 }

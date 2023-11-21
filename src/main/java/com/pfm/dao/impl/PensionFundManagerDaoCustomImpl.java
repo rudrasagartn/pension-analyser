@@ -30,17 +30,28 @@ public class PensionFundManagerDaoCustomImpl implements IPensionFundManagerDaoCu
 	Environment environment;
 
 	public PensionFundManagerDTO findByName(String name) {
-		return executeQuery(name, environment.getProperty("pfm.findByName"));
+		return queryForObject(name, environment.getProperty("pfm.findByName"));
 	}
 
 	@Override
 	public PensionFundManagerDTO findById(String id) {
-		return executeQuery(id, environment.getProperty("pfm.findById"));
+		return queryForObject(id, environment.getProperty("pfm.findById"));
 	}
 
-	private PensionFundManagerDTO executeQuery(String arg, String sql) {
-		return jdbcTemplate.query(sql, pfmDtoRowMapper, arg).stream().findFirst()
-				.orElseThrow(() -> new ResourceNotFoundException(arg + " : " + HttpStatus.NOT_FOUND.toString()));
+	@Override
+	public PensionFundManagerDTO queryForObject(String sql,String param) {
+		return jdbcTemplate.query(sql, pfmDtoRowMapper, param).stream().findFirst()
+				.orElseThrow(() -> new ResourceNotFoundException(param + " : " + HttpStatus.NOT_FOUND.toString()));
+	}
+	
+	@Override
+	public List<PensionFundManagerDTO> queryForList(String sql,String param) {
+		List<PensionFundManagerDTO> result = jdbcTemplate.query(environment.getProperty("pfm.findByNameLike"),
+				pfmDtoRowMapper, param );
+		if (CollectionUtils.isEmpty(result)) {
+			throw new ResourceNotFoundException(param + " : " + HttpStatus.NOT_FOUND.toString());
+		}
+		return result;
 	}
 
 	@Override

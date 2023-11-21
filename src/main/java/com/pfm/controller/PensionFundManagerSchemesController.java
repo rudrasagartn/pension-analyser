@@ -37,6 +37,12 @@ public class PensionFundManagerSchemesController extends BaseController implemen
 
 	}
 	
+	@GetMapping("/getById")
+	public ResponseEntity<PensionFundManagerSchemesDTO> getById(@RequestParam String pfmsId){
+		PensionFundManagerSchemesDTO dto = iPFMSService.findById(pfmsId);
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+	}
+	
 	@GetMapping("/getByName")
 	public ResponseEntity<PensionFundManagerSchemesDTO> getByName(@RequestParam String pfmsName){
 		PensionFundManagerSchemesDTO dto = iPFMSService.findByName(pfmsName);

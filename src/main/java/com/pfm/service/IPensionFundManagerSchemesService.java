@@ -19,4 +19,6 @@ public interface IPensionFundManagerSchemesService extends IPFMSchemeConverter{
 
 	List<PensionFundManagerSchemesDTO> findSchemesByFundManagerId(String pfmsId);
 
+	PensionFundManagerSchemesDTO findById(String pfmsId);
+
 }
