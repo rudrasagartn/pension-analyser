@@ -30,6 +30,14 @@ public class PFMServiceImpl implements IPFMService {
 		List<PensionFundManager> responseList = dao.saveAll(list);
 		return list.size() == responseList.size();
 	}
+	
+	@Override
+	public boolean save2(List<PensionFundManager> pfmDtoList) {
+		//List<PensionFundManager> list = convertToModels.apply(pfmDtoList);
+		List<PensionFundManager> responseList = dao.saveAll(pfmDtoList);
+		return pfmDtoList.size() == responseList.size();
+	}
+	
 
 	@Override
 	public List<PensionFundManagerDTO> getAll() {
@@ -38,7 +46,7 @@ public class PFMServiceImpl implements IPFMService {
 
 	@Override
 	public PensionFundManagerDTO findByName(String name) {
-		return daoCustom.findByName(name);
+		return daoCustom.queryForObject(environment.getProperty("pfm.findByName"),name);
 	}
 
 	@Override
@@ -49,6 +57,6 @@ public class PFMServiceImpl implements IPFMService {
 
 	@Override
 	public List<PensionFundManagerDTO> findByNameLike(String name) {
-		return daoCustom.queryForList(environment.getProperty("pfm.findByNameLike"), name);
+		return daoCustom.queryForList(environment.getProperty("pfm.findByNameLike"), "%"+name+"%");
 	}
 }

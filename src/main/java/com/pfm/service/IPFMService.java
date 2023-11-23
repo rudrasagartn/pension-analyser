@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pfm.converter.IPFMConverter;
 import com.pfm.dto.PensionFundManagerDTO;
+import com.pfm.model.PensionFundManager;
 
 public interface IPFMService extends IPFMConverter{
 	
@@ -20,5 +21,8 @@ public interface IPFMService extends IPFMConverter{
 
 
 	public List<PensionFundManagerDTO> findByNameLike(String name);
+
+
+	boolean save2(List<PensionFundManager> pfmDtoList);
 	
 }

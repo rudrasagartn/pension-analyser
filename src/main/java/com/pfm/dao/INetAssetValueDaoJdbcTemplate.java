@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.pfm.dto.NetAssetValueDTO;
+import com.pfm.model.NetAssetValue;
 
 @Repository
 public interface INetAssetValueDaoJdbcTemplate {
@@ -23,5 +24,7 @@ public interface INetAssetValueDaoJdbcTemplate {
 
 	RowMapper<NetAssetValueDTO> rowMapper = (rs, rowNum) -> new NetAssetValueDTO(rs.getBigDecimal("nav"),
 			rs.getDate("nav_date"), rs.getString("scheme_id"));
+
+	void insertBatch(List<NetAssetValue> navs);
 
 }

@@ -34,9 +34,32 @@ public interface IPFMSchemeConverter extends IBaseConverter{
 
 	};
 	
+	@SuppressWarnings("unchecked")
+	Function<JSONArray, List<PensionFundManagerSchemes>> getPensionFundManagerSchemesModelList = (responseArray) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		List<PensionFundManagerSchemes> list = new ArrayList<>();
+		responseArray.stream().forEach((item) -> {
+			try {
+				list.add(mapper.readValue(item.toString(), PensionFundManagerSchemes.class));
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+
+		});
+		return list;
+
+	};
+	
 	default List<PensionFundManagerSchemesDTO> getPFMSchemeData(String url, RestTemplate restTemplate) {
 		ResponseEntity<String> jsonResponse = restTemplate.getForEntity(url, String.class);
 		List<PensionFundManagerSchemesDTO> schemesDTOList = processResponse.andThen(getPensionFundManagerSchemesDTOList)
+				.apply(jsonResponse.getBody());
+		return schemesDTOList;
+	}
+	
+	default List<PensionFundManagerSchemes> getPFMSchemeData2(String url, RestTemplate restTemplate) {
+		ResponseEntity<String> jsonResponse = restTemplate.getForEntity(url, String.class);
+		List<PensionFundManagerSchemes> schemesDTOList = processResponse.andThen(getPensionFundManagerSchemesModelList)
 				.apply(jsonResponse.getBody());
 		return schemesDTOList;
 	}

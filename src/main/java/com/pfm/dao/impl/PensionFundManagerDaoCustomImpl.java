@@ -29,15 +29,6 @@ public class PensionFundManagerDaoCustomImpl implements IPensionFundManagerDaoCu
 	@Autowired
 	Environment environment;
 
-	public PensionFundManagerDTO findByName(String name) {
-		return queryForObject(name, environment.getProperty("pfm.findByName"));
-	}
-
-	@Override
-	public PensionFundManagerDTO findById(String id) {
-		return queryForObject(id, environment.getProperty("pfm.findById"));
-	}
-
 	@Override
 	public PensionFundManagerDTO queryForObject(String sql,String param) {
 		return jdbcTemplate.query(sql, pfmDtoRowMapper, param).stream().findFirst()
@@ -54,15 +45,22 @@ public class PensionFundManagerDaoCustomImpl implements IPensionFundManagerDaoCu
 		return result;
 	}
 
-	@Override
-	public List<PensionFundManagerDTO> findByNameLike(String name) {
-		List<PensionFundManagerDTO> result = jdbcTemplate.query(environment.getProperty("pfm.findByNameLike"),
-				pfmDtoRowMapper, "%" + name + "%");
-		if (CollectionUtils.isEmpty(result)) {
-			throw new ResourceNotFoundException(name + " : " + HttpStatus.NOT_FOUND.toString());
-		}
-		return result;
-	}
+	/*
+	 * public PensionFundManagerDTO findByName(String name) { return
+	 * queryForObject(name, environment.getProperty("pfm.findByName")); }
+	 * 
+	 * @Override public PensionFundManagerDTO findById(String id) { return
+	 * queryForObject(id, environment.getProperty("pfm.findById")); }
+	 */
+	
+	/*
+	 * @Override public List<PensionFundManagerDTO> findByNameLike(String name) {
+	 * List<PensionFundManagerDTO> result =
+	 * jdbcTemplate.query(environment.getProperty("pfm.findByNameLike"),
+	 * pfmDtoRowMapper, "%" + name + "%"); if (CollectionUtils.isEmpty(result)) {
+	 * throw new ResourceNotFoundException(name + " : " +
+	 * HttpStatus.NOT_FOUND.toString()); } return result; }
+	 */
 	RowMapper<PensionFundManagerDTO> pfmDtoRowMapper = (rs, rowNum) -> new PensionFundManagerDTO(rs.getString("pfm_id"),
 			rs.getString("name"));
 }
