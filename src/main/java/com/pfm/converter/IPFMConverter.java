@@ -64,12 +64,12 @@ public interface IPFMConverter extends IBaseConverter{
 		return dtoList;
 	}
 	
-default List<PensionFundManager> getPFMData2(String url, RestTemplate restTemplate) {
+	default List<PensionFundManager> getPFMData2(String url, RestTemplate restTemplate) {
 		
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		List<PensionFundManager> dtoList = processResponse.andThen(getPensionFundManagerModelList)
+		List<PensionFundManager> modelList = processResponse.andThen(getPensionFundManagerModelList)
 				.apply(response.getBody());
-		return dtoList;
+		return modelList;
 	}
 
 	/**

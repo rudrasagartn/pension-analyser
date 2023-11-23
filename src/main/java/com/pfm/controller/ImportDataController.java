@@ -73,7 +73,7 @@ public class ImportDataController extends BaseController implements IImportDataC
 		ipfmService.save2(pfmModel.get());
 		
 	
-		CompletableFuture<List<PensionFundManagerSchemes>> dtos = CompletableFuture.supplyAsync(()->getPFMSchemeData2(pfmSchemeURL, restTemplate));
+		CompletableFuture<List<PensionFundManagerSchemes>> dtos = CompletableFuture.supplyAsync(()->getPFMSchemeModelData(pfmSchemeURL, restTemplate));
 		//List<PensionFundManagerSchemesDTO> pfmSchemes = getPFMSchemeData(pfmSchemeURL, restTemplate);
 		iPensionFundManagerSchemesService.save2(dtos.get());
 		
