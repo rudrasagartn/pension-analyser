@@ -42,7 +42,7 @@ public class NetAssetValueController extends BaseController implements INAVConve
 		return new ResponseEntity<>(dto,HttpStatus.OK);
 	}
 	
-	@GetMapping("/getNAVForScheme")
+	@GetMapping("/getAllNAVForScheme")
 	public ResponseEntity<List<NetAssetValueDTO>> getAllNAVforScheme(@RequestParam String schemeId){
 		List<NetAssetValueDTO> result=iNetAssetValueService.findAllNAVforScheme(schemeId);
 		return new ResponseEntity<>(result,HttpStatus.OK);

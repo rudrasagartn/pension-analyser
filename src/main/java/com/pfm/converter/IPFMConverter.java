@@ -36,12 +36,40 @@ public interface IPFMConverter extends IBaseConverter{
 		return list;
 	};
 	
+	
+	/**
+	 * Function Interface Implementation to Convert JSONArray to List of
+	 * PensionFundManagerDTO
+	 */
+	@SuppressWarnings("unchecked")
+	Function<JSONArray, List<PensionFundManager>> getPensionFundManagerModelList = (responseArray) -> {
+
+		List<PensionFundManager> list = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		responseArray.stream().forEach((arrayItem) -> {
+			try {
+				PensionFundManager model = mapper.readValue(arrayItem.toString(), PensionFundManager.class);
+				list.add(model);
+			} catch (Exception e) {
+			}
+		});
+		return list;
+	};
+	
 	default List<PensionFundManagerDTO> getPFMData(String url, RestTemplate restTemplate) {
 		
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		List<PensionFundManagerDTO> dtoList = processResponse.andThen(getPensionFundManagerDTOList)
 				.apply(response.getBody());
 		return dtoList;
+	}
+	
+	default List<PensionFundManager> getPFMData2(String url, RestTemplate restTemplate) {
+		
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		List<PensionFundManager> modelList = processResponse.andThen(getPensionFundManagerModelList)
+				.apply(response.getBody());
+		return modelList;
 	}
 
 	/**

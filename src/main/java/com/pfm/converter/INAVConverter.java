@@ -29,6 +29,13 @@ public interface INAVConverter extends IBaseConverter {
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		return processResponse.andThen(getNetAssetValueDTOList).apply(response.getBody());
 	}
+	
+	
+	public default List<NetAssetValue> getLatestNAVModel(String url, RestTemplate restTemplate) {
+
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		return processResponse.andThen(getNetAssetValueModelList).apply(response.getBody());
+	}
 
 	@SuppressWarnings("unchecked")
 	Function<JSONArray, List<NetAssetValueDTO>> getNetAssetValueDTOList = responseArray -> {
@@ -46,12 +53,40 @@ public interface INAVConverter extends IBaseConverter {
 		return list;
 	};
 	
+	@SuppressWarnings("unchecked")
+	Function<JSONArray, List<NetAssetValue>> getNetAssetValueModelList = responseArray -> {
+
+		List<NetAssetValue> list = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		responseArray.stream().forEach(arrayItem -> {
+			try {
+				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
+				dateFormat.parse(dateFormat.format(dto.getDate()));
+				NAVCompositeKey navCompositeKey = new NAVCompositeKey(dateFormat.parse(dateFormat.format(dto.getDate())), dto.getScheme_id());
+				NetAssetValue navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
+				navAssetValue.setNavCompositeKey(navCompositeKey);
+				list.add(navAssetValue);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		return list;
+	};
+	
 	public default List<NetAssetValueDTO> getLatestNAV(String url, String schemeId,RestTemplate restTemplate) {
 
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		JSONArray arrayData = processResponse.apply(response.getBody());
 		
 		return getNetAssetValueDTOLists.apply(arrayData, schemeId);
+	}
+	
+	public default List<NetAssetValue> getLatestNAVModel(String url, String schemeId,RestTemplate restTemplate) {
+
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		JSONArray arrayData = processResponse.apply(response.getBody());
+		
+		return getNetAssetValueModelLists.apply(arrayData, schemeId);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -64,6 +99,28 @@ public interface INAVConverter extends IBaseConverter {
 				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
 				dto.setScheme_id(schemeId);
 				list.add(dto);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		return list;
+	};
+	
+	@SuppressWarnings("unchecked")
+	BiFunction<JSONArray, String, List<NetAssetValue>> getNetAssetValueModelLists = (responseArray, schemeId) -> {
+
+		List<NetAssetValue> list = new ArrayList<>();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		responseArray.stream().forEach(arrayItem -> {
+			try {
+				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
+				dateFormat.parse(dateFormat.format(dto.getDate()));
+				NAVCompositeKey navCompositeKey = new NAVCompositeKey(dateFormat.parse(dateFormat.format(dto.getDate())), schemeId);
+				NetAssetValue navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
+				navAssetValue.setNavCompositeKey(navCompositeKey);
+				list.add(navAssetValue);
+				 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

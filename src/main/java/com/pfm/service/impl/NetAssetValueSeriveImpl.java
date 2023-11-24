@@ -33,6 +33,14 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 		List<NetAssetValue> list = daoAssetValue.saveAll(convertToModels.apply(navDTOs));
 		return CollectionUtils.isNotEmpty(list) && list.size() == navDTOs.size();
 	}
+	
+	@Override
+	public Boolean save2(List<NetAssetValue> navModel) {
+		
+		//List<NetAssetValue> list = daoAssetValue.saveAll(navModel);
+		dao.insertBatch(navModel);
+		return CollectionUtils.isNotEmpty(navModel) && navModel.size() == navModel.size();
+	}
 
 	@Override
 	public List<NetAssetValueDTO> getLatestNAV(int howManyDays) {

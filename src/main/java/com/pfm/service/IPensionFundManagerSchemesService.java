@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pfm.converter.IPFMSchemeConverter;
 import com.pfm.dto.PensionFundManagerSchemesDTO;
+import com.pfm.model.PensionFundManagerSchemes;
 
 public interface IPensionFundManagerSchemesService extends IPFMSchemeConverter{
 
@@ -20,5 +21,9 @@ public interface IPensionFundManagerSchemesService extends IPFMSchemeConverter{
 	List<PensionFundManagerSchemesDTO> findSchemesByFundManagerId(String pfmsId);
 
 	PensionFundManagerSchemesDTO findById(String pfmsId);
+
+	Boolean save2(List<PensionFundManagerSchemes> schemesDTOList);
+
+	List<PensionFundManagerSchemes> getAllModel();
 
 }
