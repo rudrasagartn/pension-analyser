@@ -41,7 +41,8 @@ public class PFMServiceImpl implements IPFMService {
 
 	@Override
 	public List<PensionFundManagerDTO> getAll() {
-		return convertToDtos.apply(dao.findAll());
+		return daoCustom.queryForList(environment.getProperty("pfm.findAll"));
+		//return convertToDtos.apply(dao.findAll());
 	}
 
 	@Override

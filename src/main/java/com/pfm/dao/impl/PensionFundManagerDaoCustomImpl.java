@@ -37,30 +37,25 @@ public class PensionFundManagerDaoCustomImpl implements IPensionFundManagerDaoCu
 	
 	@Override
 	public List<PensionFundManagerDTO> queryForList(String sql,String param) {
-		List<PensionFundManagerDTO> result = jdbcTemplate.query(environment.getProperty("pfm.findByNameLike"),
+		List<PensionFundManagerDTO> result = jdbcTemplate.query(sql,
 				pfmDtoRowMapper, param );
 		if (CollectionUtils.isEmpty(result)) {
 			throw new ResourceNotFoundException(param + " : " + HttpStatus.NOT_FOUND.toString());
 		}
 		return result;
 	}
-
-	/*
-	 * public PensionFundManagerDTO findByName(String name) { return
-	 * queryForObject(name, environment.getProperty("pfm.findByName")); }
-	 * 
-	 * @Override public PensionFundManagerDTO findById(String id) { return
-	 * queryForObject(id, environment.getProperty("pfm.findById")); }
-	 */
 	
-	/*
-	 * @Override public List<PensionFundManagerDTO> findByNameLike(String name) {
-	 * List<PensionFundManagerDTO> result =
-	 * jdbcTemplate.query(environment.getProperty("pfm.findByNameLike"),
-	 * pfmDtoRowMapper, "%" + name + "%"); if (CollectionUtils.isEmpty(result)) {
-	 * throw new ResourceNotFoundException(name + " : " +
-	 * HttpStatus.NOT_FOUND.toString()); } return result; }
-	 */
+	@Override
+	public List<PensionFundManagerDTO> queryForList(String sql) {
+		List<PensionFundManagerDTO> result = jdbcTemplate.query(sql,
+				pfmDtoRowMapper );
+		if (CollectionUtils.isEmpty(result)) {
+			throw new ResourceNotFoundException(HttpStatus.NOT_FOUND.toString());
+		}
+		return result;
+	}
+
+	
 	RowMapper<PensionFundManagerDTO> pfmDtoRowMapper = (rs, rowNum) -> new PensionFundManagerDTO(rs.getString("pfm_id"),
 			rs.getString("name"));
 }
