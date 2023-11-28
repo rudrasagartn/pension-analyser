@@ -2,10 +2,17 @@ package com.pfm.converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
@@ -22,6 +29,7 @@ public interface INAVConverter extends IBaseConverter {
 	ModelMapper modelMapper2 = new ModelMapper();
 	
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+	DateTimeFormatter formatter =DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	
 	
 	public default List<NetAssetValueDTO> getLatestNAV(String url, RestTemplate restTemplate) {
@@ -36,6 +44,13 @@ public interface INAVConverter extends IBaseConverter {
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		return processResponse.andThen(getNetAssetValueModelList).apply(response.getBody());
 	}
+	
+	UnaryOperator <Date> convertDate =  (dtoDate)-> {
+		LocalDate localDate = dtoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		String dateStr = formatter.format(localDate);
+		TemporalAccessor is = formatter.parse(dateStr);
+		return new Date(Instant.from(is).toEpochMilli());
+	};
 
 	@SuppressWarnings("unchecked")
 	Function<JSONArray, List<NetAssetValueDTO>> getNetAssetValueDTOList = responseArray -> {
@@ -61,8 +76,7 @@ public interface INAVConverter extends IBaseConverter {
 		responseArray.stream().forEach(arrayItem -> {
 			try {
 				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
-				dateFormat.parse(dateFormat.format(dto.getDate()));
-				NAVCompositeKey navCompositeKey = new NAVCompositeKey(dateFormat.parse(dateFormat.format(dto.getDate())), dto.getScheme_id());
+				NAVCompositeKey navCompositeKey = new NAVCompositeKey(dto.getDate(), dto.getScheme_id());
 				NetAssetValue navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
 				navAssetValue.setNavCompositeKey(navCompositeKey);
 				list.add(navAssetValue);
@@ -115,8 +129,7 @@ public interface INAVConverter extends IBaseConverter {
 		responseArray.stream().forEach(arrayItem -> {
 			try {
 				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
-				dateFormat.parse(dateFormat.format(dto.getDate()));
-				NAVCompositeKey navCompositeKey = new NAVCompositeKey(dateFormat.parse(dateFormat.format(dto.getDate())), schemeId);
+				NAVCompositeKey navCompositeKey = new NAVCompositeKey(dto.getDate(), schemeId);
 				NetAssetValue navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
 				navAssetValue.setNavCompositeKey(navCompositeKey);
 				list.add(navAssetValue);
@@ -135,7 +148,7 @@ public interface INAVConverter extends IBaseConverter {
 		NetAssetValue navAssetValue = null;
 		try {
 			dateFormat.parse(dateFormat.format(dto.getDate()));
-			NAVCompositeKey navCompositeKey = new NAVCompositeKey(dateFormat.parse(dateFormat.format(dto.getDate())), dto.getScheme_id());
+			NAVCompositeKey navCompositeKey = new NAVCompositeKey(dto.getDate(), dto.getScheme_id());
 			navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
 			navAssetValue.setNavCompositeKey(navCompositeKey);
 		} catch (ParseException e) {
@@ -169,4 +182,6 @@ public interface INAVConverter extends IBaseConverter {
 	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels2 = navDTOs -> navDTOs.stream()
 			.map(dto -> new NetAssetValue(dto.getNav(), new NAVCompositeKey(dto.getDate(), dto.getScheme_id())))
 			.collect(Collectors.toList());
+	
+	
 }

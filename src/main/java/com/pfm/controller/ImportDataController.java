@@ -3,7 +3,6 @@ package com.pfm.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import com.pfm.model.PensionFundManagerSchemes;
 import com.pfm.service.INetAssetValueService;
 import com.pfm.service.IPFMService;
 import com.pfm.service.IPensionFundManagerSchemesService;
+import com.pfm.service.ImportDataService;
 
 @RestController
 @RequestMapping("/nps/import")
@@ -34,6 +34,9 @@ public class ImportDataController extends BaseController implements IImportDataC
 	
 	@Autowired
 	INetAssetValueService iNetAssetValueService;
+	
+	@Autowired
+	ImportDataService importService;
 
 	@GetMapping("/importPFMDatazzzzzzz")
 	public void importData() {
@@ -60,32 +63,50 @@ public class ImportDataController extends BaseController implements IImportDataC
 	}
 	
 	@GetMapping("/importPFMData")
-	public void importData2() throws InterruptedException, ExecutionException {
+	public void importData2()  {
 		long start = System.currentTimeMillis();
 		String baseUrl = getURL("base");
-		
+
 		String pfmsURL = baseUrl + getURL("pfms");
 		String pfmSchemeURL = baseUrl + getURL("schemes");
 		String navURL = baseUrl + getURL("latest");
 		
-		CompletableFuture<List<PensionFundManager>> pfmModel = CompletableFuture.supplyAsync(()->getPFMData2(pfmsURL, restTemplate));
-		//List<PensionFundManagerDTO> pfmDTOs = getPFMData(pfmsURL, restTemplate);
-		ipfmService.save2(pfmModel.get());
+		CompletableFuture<List<PensionFundManager>> pfmModelList = importService.invokePBServiceForPFMData(pfmsURL,
+				restTemplate);
+		ipfmService.save2(pfmModelList.join());
+
+		/*
+		 * CompletableFuture<List<PensionFundManager>> pfmModelList = CompletableFuture
+		 * .supplyAsync(() -> getPFMData2(pfmsURL, restTemplate));
+		 */
 		
-	
-		CompletableFuture<List<PensionFundManagerSchemes>> dtos = CompletableFuture.supplyAsync(()->getPFMSchemeModelData(pfmSchemeURL, restTemplate));
-		//List<PensionFundManagerSchemesDTO> pfmSchemes = getPFMSchemeData(pfmSchemeURL, restTemplate);
-		iPensionFundManagerSchemesService.save2(dtos.get());
+
+		/*
+		 * CompletableFuture<List<PensionFundManagerSchemes>> dtos = CompletableFuture
+		 * .supplyAsync(() -> getPFMSchemeModelData(pfmSchemeURL, restTemplate));
+		 */
 		
-		iNetAssetValueService.save2(getAllPFMSchemesNAV2());
+		CompletableFuture<List<PensionFundManagerSchemes>> dtos =importService.invokePBServiceForPFMSchemeData(pfmSchemeURL,
+				restTemplate);
 		
 		
 		
-		List<NetAssetValue> navs= getLatestNAVModel(navURL,  restTemplate);
+		iPensionFundManagerSchemesService.save2(dtos.join());
+		
+		List<CompletableFuture<List<NetAssetValue>>> cfNavs=importService.getAllPFMSchemesNAV(restTemplate);
+		List<List<NetAssetValue>> responseAll  = new ArrayList<>();
+		for (CompletableFuture<List<NetAssetValue>> completableFuture : cfNavs) {
+		responseAll.add(completableFuture.join());	
+		}
+		List<NetAssetValue> navsData=responseAll.stream().flatMap(List::stream).collect(Collectors.toList());
+		
+		iNetAssetValueService.save2(navsData);
+
+		List<NetAssetValue> navs = getLatestNAVModel(navURL, restTemplate);
 		iNetAssetValueService.save2(navs);
-		
+
 		long duration = System.currentTimeMillis() - start;
-		System.out.println("Duration took of Import 2222: "+duration);
+		System.out.println("Duration took of Import 2222: " + duration);
 	}
 	
 	
@@ -109,10 +130,9 @@ public class ImportDataController extends BaseController implements IImportDataC
 	}
 	
 	
-	public List<NetAssetValue> getAllPFMSchemesNAV2() throws InterruptedException, ExecutionException{
+	public List<NetAssetValue> getAllPFMSchemesNAV2() {
 		List<List<NetAssetValue>> responseAll  = new ArrayList<>();
 		List<PensionFundManagerSchemes> schemes = iPensionFundManagerSchemesService.getAllModel();
-		//List<PensionFundManagerSchemes> schemes2=convertToPFMSModelList.apply(schemes);
 		System.out.println("Size : "+schemes.size());
 		for (PensionFundManagerSchemes scheme : schemes) {
 			String schemeId =scheme.getId();
@@ -121,8 +141,7 @@ public class ImportDataController extends BaseController implements IImportDataC
 			schemeNavUrl = schemeNavUrl.replaceAll("SCHEME_ID", schemeId);
 			String url = baseUrl+schemeNavUrl;
 			CompletableFuture<List<NetAssetValue>> cf=	CompletableFuture.supplyAsync(()->getLatestNAVModel(url, schemeId,restTemplate));
-			//List<NetAssetValue> response = getLatestNAVModel(url, schemeId,restTemplate);
-			responseAll.add(cf.get());
+			responseAll.add(cf.join());
 			System.out.println("done : "+schemeId);
 		}
 		List<NetAssetValue> navs=responseAll.stream().flatMap(List::stream).collect(Collectors.toList());

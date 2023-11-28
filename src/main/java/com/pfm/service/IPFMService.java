@@ -23,6 +23,6 @@ public interface IPFMService extends IPFMConverter{
 	public List<PensionFundManagerDTO> findByNameLike(String name);
 
 
-	boolean save2(List<PensionFundManager> pfmDtoList);
+	List<PensionFundManager> save2(List<PensionFundManager> pfmDtoList);
 	
 }
