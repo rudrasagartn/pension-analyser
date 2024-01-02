@@ -1,5 +1,7 @@
 package com.pfm.dto;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +11,9 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PensionFundManagerDTO {
+public class PensionFundManagerDTO implements Serializable{
 
+	private static final long serialVersionUID = -7059944496964365593L;
 	@Getter
 	@Setter
 	private String id;

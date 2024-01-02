@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  pension-analyser:
+    #image: in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on: # Start the depends_on first
+      - mysql 
+    environment:
+      RDS_HOSTNAME: root
+      RDS_PORT: 33070
+      RDS_DB_NAME: pfm
+      RDS_USERNAME: user
+      RDS_PASSWORD: welcome
+    networks:
+      - pfm
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "33070:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root 
+      MYSQL_USER: user
+      MYSQL_PASSWORD: welcome
+      MYSQL_DATABASE: pfm
+    volumes:
+      - mysql-database-data-volume:/var/lib/mysql
+    networks:
+      - pfm 
+  
+# Volumes
+volumes:
+  mysql-database-data-volume:
+
+networks:
+  pfm:

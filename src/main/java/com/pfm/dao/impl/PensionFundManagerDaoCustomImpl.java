@@ -1,11 +1,10 @@
-/**
- * 
- */
 package com.pfm.dao.impl;
 
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -23,6 +22,7 @@ import com.pfm.exception.ResourceNotFoundException;
 @Repository
 public class PensionFundManagerDaoCustomImpl implements IPensionFundManagerDaoCustom {
 
+	private static final Logger log = LoggerFactory.getLogger(PensionFundManagerDaoCustomImpl.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -31,6 +31,7 @@ public class PensionFundManagerDaoCustomImpl implements IPensionFundManagerDaoCu
 
 	@Override
 	public PensionFundManagerDTO queryForObject(String sql,String param) {
+		log.info("executing query >> {} with parameter >> {} ",sql,param);
 		return jdbcTemplate.query(sql, pfmDtoRowMapper, param).stream().findFirst()
 				.orElseThrow(() -> new ResourceNotFoundException(param + " : " + HttpStatus.NOT_FOUND.toString()));
 	}

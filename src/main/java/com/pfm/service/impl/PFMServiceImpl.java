@@ -3,6 +3,8 @@ package com.pfm.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.pfm.model.PensionFundManager;
 import com.pfm.service.IPFMService;
 
 @Service
+@CacheConfig(cacheNames = "pfm")
 public class PFMServiceImpl implements IPFMService {
 
 	@Autowired
@@ -46,6 +49,7 @@ public class PFMServiceImpl implements IPFMService {
 	}
 
 	@Override
+	@Cacheable(key="#name")
 	public PensionFundManagerDTO findByName(String name) {
 		return daoCustom.queryForObject(environment.getProperty("pfm.findByName"),name);
 	}
