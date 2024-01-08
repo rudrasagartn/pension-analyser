@@ -41,7 +41,7 @@ public class PensionFundManagerController extends BaseController implements IPFM
 	public void getPFM() {
 		String url = getURL("base") + getURL("pfms");
 		List<PensionFundManagerDTO> dtoList = getPFMData(url, restTemplate);
-		dtoList.forEach((obj) -> System.out.println("DTO : " + obj));
+		//dtoList.forEach((obj) -> System.out.println("DTO : " + obj));
 		ipfmService.save(dtoList); // seperate this to computableFuture
 	}
 	

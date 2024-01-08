@@ -36,36 +36,36 @@ public class PensionFundManagerSchemesController extends BaseController implemen
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
-	
+
 	@GetMapping("/getById")
-	public ResponseEntity<PensionFundManagerSchemesDTO> getById(@RequestParam String pfmsId){
+	public ResponseEntity<PensionFundManagerSchemesDTO> getById(@RequestParam String pfmsId) {
 		PensionFundManagerSchemesDTO dto = iPFMSService.findById(pfmsId);
-		return new ResponseEntity<>(dto,HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/getByName")
-	public ResponseEntity<PensionFundManagerSchemesDTO> getByName(@RequestParam String pfmsName){
+	public ResponseEntity<PensionFundManagerSchemesDTO> getByName(@RequestParam String pfmsName) {
 		PensionFundManagerSchemesDTO dto = iPFMSService.findByName(pfmsName);
-		return new ResponseEntity<>(dto,HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/getByNameLike")
-	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getByNameLike(@RequestParam String pfmsName){
+	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getByNameLike(@RequestParam String pfmsName) {
 		List<PensionFundManagerSchemesDTO> dtos = iPFMSService.findByNameLike(pfmsName);
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/getSchemesByFundManagerName")
-	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getSchemesByFundManagerName(@RequestParam String pfmsName){
+	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getSchemesByFundManagerName(
+			@RequestParam String pfmsName) {
 		List<PensionFundManagerSchemesDTO> dtos = iPFMSService.findSchemesByFundManagerName(pfmsName);
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/getSchemesByFundManagerId")
-	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getSchemesByFundManagerId(@RequestParam String pfmsId){
+	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getSchemesByFundManagerId(@RequestParam String pfmsId) {
 		List<PensionFundManagerSchemesDTO> dtos = iPFMSService.findSchemesByFundManagerId(pfmsId);
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 
 }

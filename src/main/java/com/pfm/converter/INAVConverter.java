@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +27,7 @@ import com.pfm.model.NAVCompositeKey;
 import com.pfm.model.NetAssetValue;
 
 public interface INAVConverter extends IBaseConverter {
+	final Logger log = LoggerFactory.getLogger(INAVConverter.class);
 	ModelMapper modelMapper2 = new ModelMapper();
 	
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -62,7 +64,7 @@ public interface INAVConverter extends IBaseConverter {
 				NetAssetValueDTO dto = mapper.readValue(arrayItem.toString(), NetAssetValueDTO.class);
 				list.add(dto);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Exception occured converting NetAssetValueDTO ", e);
 			}
 		});
 		return list;
@@ -81,7 +83,7 @@ public interface INAVConverter extends IBaseConverter {
 				navAssetValue.setNavCompositeKey(navCompositeKey);
 				list.add(navAssetValue);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Exception occured converting NetAssetValue model", e);
 			}
 		});
 		return list;
@@ -114,7 +116,7 @@ public interface INAVConverter extends IBaseConverter {
 				dto.setScheme_id(schemeId);
 				list.add(dto);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Exception occured converting NetAssetValueDTO ", e);
 			}
 		});
 		return list;
@@ -135,7 +137,7 @@ public interface INAVConverter extends IBaseConverter {
 				list.add(navAssetValue);
 				 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Exception occured converting NetAssetValue model ", e);
 			}
 		});
 		return list;
@@ -152,18 +154,18 @@ public interface INAVConverter extends IBaseConverter {
 			navAssetValue = modelMapper2.map(dto, NetAssetValue.class);
 			navAssetValue.setNavCompositeKey(navCompositeKey);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("Exception occured converting NetAssetValue model ", e);
 		}
 		return navAssetValue;
 	};
+	
 	/**
 	 * Convert List<DTO> to List<Entity> for PensionFundManager
 	 */
 	
 	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels = dtos -> dtos.stream()
-			.map(dto -> convertToModel.apply(dto)).collect(Collectors.toList());
+			.map(convertToModel::apply).toList();
 	 
-
 	/**
 	 * Convert Entity to DTO for PensionFundManager
 	 */
@@ -173,15 +175,15 @@ public interface INAVConverter extends IBaseConverter {
 				.addMapping(src -> src.getNavCompositeKey().getScheme_id(), NetAssetValueDTO::setScheme_id);
 		return modelMapper2.map(model, NetAssetValueDTO.class);
 	};
+	
 	/**
 	 * Convert List<Entity> to List<DTO> for PensionFundManager
 	 */
 	Function<List<NetAssetValue>, List<NetAssetValueDTO>> convertToDtos = models -> models.stream()
-			.map(model -> convertToDto.apply(model)).collect(Collectors.toList());
+			.map(convertToDto::apply).toList();
 
 	Function<List<NetAssetValueDTO>, List<NetAssetValue>> convertToModels2 = navDTOs -> navDTOs.stream()
 			.map(dto -> new NetAssetValue(dto.getNav(), new NAVCompositeKey(dto.getDate(), dto.getScheme_id())))
-			.collect(Collectors.toList());
-	
+			.toList();
 	
 }
