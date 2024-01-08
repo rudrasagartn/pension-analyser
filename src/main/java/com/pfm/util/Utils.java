@@ -5,7 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class Utils {
+
+	private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
 	private Utils() {
 
@@ -22,7 +27,7 @@ public final class Utils {
 		try {
 			date = simpleDateFormat.parse(simpleDateFormat.format(cal.getTime()));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("Exception occured parsing date ", e);
 		}
 		return date;
 	}
