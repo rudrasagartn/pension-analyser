@@ -2,6 +2,7 @@ package com.pfm.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,8 @@ public class NetAssetValueSeriveImpl implements INetAssetValueService {
 	
 	@Override
 	public Boolean save2(List<NetAssetValue> navModel) {
-		
-		//List<NetAssetValue> list = daoAssetValue.saveAll(navModel);
-		dao.insertBatch(navModel);
-		return CollectionUtils.isNotEmpty(navModel) && navModel.size() == navModel.size();
+		CompletableFuture<Boolean> cf= CompletableFuture.supplyAsync(()->dao.insertBatch(navModel));
+		return cf.join();
 	}
 
 	@Override

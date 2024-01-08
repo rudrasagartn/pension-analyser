@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import com.pfm.model.PensionFundManager;
 import com.pfm.model.PensionFundManagerSchemes;
 
 @DataJpaTest
@@ -17,10 +18,16 @@ public class PensionFundManagerSchemesDaoTest {
 	@Autowired
 	IPensionFundManagerSchemesDAO dao;
 	
+	@Autowired
+	IPensionFundManagerDao pfmDao;
+	
 	@Test
 	public void givenListOfPFMSchemes_whenGetAllInvoked_thenReturnListOfPFMSchemes() {
 		
 		//given ( preconditions / setup )
+		PensionFundManager pfm = new PensionFundManager("SM01", "Aditya Birla Sunlife Pension Management Limited");
+		pfmDao.save(pfm);
+		
 		PensionFundManagerSchemes pfms = new PensionFundManagerSchemes();
 		pfms.setId("SM010001");
 		pfms.setName("ADITYA BIRLA SUNLIFE PENSION FUND SCHEME E - TIER I");

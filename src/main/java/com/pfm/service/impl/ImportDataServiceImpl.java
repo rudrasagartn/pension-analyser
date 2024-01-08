@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import com.pfm.model.PensionFundManager;
 import com.pfm.model.PensionFundManagerSchemes;
 import com.pfm.service.IPensionFundManagerSchemesService;
 import com.pfm.service.ImportDataService;
+import static com.pfm.util.UrlConstants.*;
 
 /**
  * @author rudrasagar.tn
@@ -24,53 +27,50 @@ import com.pfm.service.ImportDataService;
  */
 @Service
 public class ImportDataServiceImpl implements ImportDataService {
-	
+	private static final Logger log = LoggerFactory.getLogger(ImportDataServiceImpl.class);
+
 	@Autowired
 	Environment environment;
-	
+
 	@Autowired
 	IPensionFundManagerSchemesService iPensionFundManagerSchemesService;
 
 	@Override
 	public CompletableFuture<List<PensionFundManager>> invokePBServiceForPFMData(String pfmsURL,
 			RestTemplate restTemplate) {
-		CompletableFuture<List<PensionFundManager>> cfPensionFundManager = CompletableFuture
+		return CompletableFuture
 				.supplyAsync(() -> getPFMData2(pfmsURL, restTemplate));
-		return cfPensionFundManager;
 	}
 
 	@Override
 	public CompletableFuture<List<PensionFundManagerSchemes>> invokePBServiceForPFMSchemeData(String pfmSchemeURL,
 			RestTemplate restTemplate) {
-		CompletableFuture<List<PensionFundManagerSchemes>> cfPensionFundManagerSchemes = CompletableFuture
-				.supplyAsync(() -> getPFMSchemeModelData(pfmSchemeURL, restTemplate));
-		return cfPensionFundManagerSchemes;
+		return CompletableFuture.supplyAsync(() -> getPFMSchemeModelData(pfmSchemeURL, restTemplate));
 	}
 
 	@Override
 	public List<CompletableFuture<List<NetAssetValue>>> getAllPFMSchemesNAV(RestTemplate restTemplate) {
-		List<CompletableFuture<List<NetAssetValue>>> responseAll  = new ArrayList<>();
+		List<CompletableFuture<List<NetAssetValue>>> responseAll = new ArrayList<>();
 		List<PensionFundManagerSchemes> schemes = iPensionFundManagerSchemesService.getAllModel();
-		System.out.println("Size : "+schemes.size());
+		log.info("Scheme Size : {}", schemes.isEmpty() ? 0 : schemes.size());
 		for (PensionFundManagerSchemes scheme : schemes) {
-			String schemeId =scheme.getId();
-			String baseUrl = getURL("base");
-			String schemeNavUrl = getURL("schemenav");
-			schemeNavUrl = schemeNavUrl.replaceAll("SCHEME_ID", schemeId);
-			String url = baseUrl+schemeNavUrl;
-			CompletableFuture<List<NetAssetValue>> cf=	CompletableFuture.supplyAsync(()->getLatestNAVModel(url, schemeId,restTemplate));
-			responseAll.add(cf);
-			System.out.println("done : "+schemeId);
+			String schemeId = scheme.getId();
+			String baseUrl = getURL(base);
+			String schemeNavUrl = getURL(schemenav);
+			if (null != baseUrl && null != schemeNavUrl) {
+				schemeNavUrl = schemeNavUrl.replace("SCHEME_ID", schemeId);
+				String url = baseUrl + schemeNavUrl;
+				CompletableFuture<List<NetAssetValue>> cf = CompletableFuture
+						.supplyAsync(() -> getLatestNAVModel(url, schemeId, restTemplate));
+				responseAll.add(cf);
+				log.info("Done with scheme with id : {}", schemeId);
+			}
 		}
-		//List<NetAssetValue> navs=responseAll.stream().flatMap(List::stream).collect(Collectors.toList());
 		return responseAll;
 	}
 
-	private String getURL(String url) {
-		// TODO Auto-generated method stub
-		return  environment.getProperty(url);
+	private String getURL(Enum<?> ref) {
+		return environment.getProperty(ref.toString());
 	}
-	
-	
 
 }

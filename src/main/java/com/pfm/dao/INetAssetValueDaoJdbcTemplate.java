@@ -22,9 +22,8 @@ public interface INetAssetValueDaoJdbcTemplate {
 
 	public NetAssetValueDTO queryForObject(String sql, String schemeId, String date);
 
+	boolean insertBatch(List<NetAssetValue> navs);
+
 	RowMapper<NetAssetValueDTO> rowMapper = (rs, rowNum) -> new NetAssetValueDTO(rs.getBigDecimal("nav"),
 			rs.getDate("nav_date"), rs.getString("scheme_id"));
-
-	void insertBatch(List<NetAssetValue> navs);
-
 }
