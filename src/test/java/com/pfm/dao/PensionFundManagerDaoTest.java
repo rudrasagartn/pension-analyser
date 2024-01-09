@@ -40,7 +40,7 @@ public class PensionFundManagerDaoTest {
 	}
 
 	@Test
-	public void givenPFMangerInstance_whenFindAllInvocked_thenReturnListOfPFManagers() {
+	void givenPFMangerInstance_whenFindAllInvocked_thenReturnListOfPFManagers() {
 		// given ( preconditions / setup )
 		dao.save(fundManager);
 
@@ -55,7 +55,7 @@ public class PensionFundManagerDaoTest {
 	}
 
 	@Test
-	public void givenPFMangerInstance_whenFindByNameInvocked_thenReturnPFManagerDto() {
+	void givenPFMangerInstance_whenFindByNameInvocked_thenReturnPFManagerDto() {
 		// given ( preconditions / setup )
 		jdbcTemplate.update("insert into pfm (pfm_id,name) values(?,?)", fundManager.getId(), fundManager.getName());
 

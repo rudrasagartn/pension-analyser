@@ -19,7 +19,6 @@ public class NetAssetValueDTO {
 
 	public NetAssetValueDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public NetAssetValueDTO(BigDecimal nav, Date date, String scheme_id) {

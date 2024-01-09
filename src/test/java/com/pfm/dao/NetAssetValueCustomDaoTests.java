@@ -28,7 +28,7 @@ public class NetAssetValueCustomDaoTests {
 	JdbcTemplate jdbcTemplate;
 
 	@Test
-	public void givenNAVInstance_whenFindByDateInvoked_thenReturnListOfNAVInstance() {
+	void givenNAVInstance_whenFindByDateInvoked_thenReturnListOfNAVInstance() {
 		// given ( preconditions / setup )
 
 		NetAssetValue nav = new NetAssetValue();
@@ -49,7 +49,7 @@ public class NetAssetValueCustomDaoTests {
 	}
 
 	@Test
-	public void givenNAVInstance_whenFindNavForSchemeInvoked_thenReturnNAVInstance() throws ParseException {
+	void givenNAVInstance_whenFindNavForSchemeInvoked_thenReturnNAVInstance() throws ParseException {
 		// given ( preconditions / setup )
 		NetAssetValue nav = new NetAssetValue();
 		nav.setNav(BigDecimal.TEN);
