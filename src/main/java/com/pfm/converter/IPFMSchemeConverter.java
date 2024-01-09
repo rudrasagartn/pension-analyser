@@ -17,14 +17,13 @@ import com.pfm.model.PensionFundManagerSchemes;
 
 public interface IPFMSchemeConverter extends IBaseConverter {
 
-	// ModelMapper modelMapper = new ModelMapper();
 	Logger log = LoggerFactory.getLogger(IPFMSchemeConverter.class);
 
 	@SuppressWarnings("unchecked")
-	Function<JSONArray, List<PensionFundManagerSchemesDTO>> getPensionFundManagerSchemesDTOList = (responseArray) -> {
+	Function<JSONArray, List<PensionFundManagerSchemesDTO>> getPensionFundManagerSchemesDTOList = responseArray -> {
 		ObjectMapper mapper = new ObjectMapper();
-		List<PensionFundManagerSchemesDTO> list = new ArrayList<PensionFundManagerSchemesDTO>();
-		responseArray.stream().forEach((item) -> {
+		List<PensionFundManagerSchemesDTO> list = new ArrayList<>();
+		responseArray.stream().forEach(item -> {
 			try {
 				list.add(mapper.readValue(item.toString(), PensionFundManagerSchemesDTO.class));
 			} catch (JsonProcessingException e) {
@@ -35,10 +34,10 @@ public interface IPFMSchemeConverter extends IBaseConverter {
 	};
 
 	@SuppressWarnings("unchecked")
-	Function<JSONArray, List<PensionFundManagerSchemes>> getPensionFundManagerSchemesModelList = (responseArray) -> {
+	Function<JSONArray, List<PensionFundManagerSchemes>> getPensionFundManagerSchemesModelList = responseArray -> {
 		ObjectMapper mapper = new ObjectMapper();
 		List<PensionFundManagerSchemes> list = new ArrayList<>();
-		responseArray.stream().forEach((item) -> {
+		responseArray.stream().forEach(item -> {
 			try {
 				list.add(mapper.readValue(item.toString(), PensionFundManagerSchemes.class));
 			} catch (JsonProcessingException e) {

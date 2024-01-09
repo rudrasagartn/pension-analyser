@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.pfm.dao;
 
 import java.util.List;
@@ -11,17 +8,8 @@ import com.pfm.dto.PensionFundManagerSchemesDTO;
 
 /**
  * @author rudrasagar.tn
- *
  */
 public interface IPensionFundManagerSchemesDAOJdbcTemplate {
-
-	//PensionFundManagerSchemesDTO findByName(String pfmsName);
-
-	/*
-	 * List<PensionFundManagerSchemesDTO> findByNameLike(String pfmsName);
-	 * 
-	 * List<PensionFundManagerSchemesDTO> findSchemesByFundManager(String pfmName);
-	 */
 
 	List<PensionFundManagerSchemesDTO> fetchRecords(String sql, String queryParam);
 

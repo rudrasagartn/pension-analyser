@@ -47,7 +47,7 @@ public interface INAVConverter extends IBaseConverter {
 		return processResponse.andThen(getNetAssetValueModelList).apply(response.getBody());
 	}
 	
-	UnaryOperator <Date> convertDate =  (dtoDate)-> {
+	UnaryOperator<Date> convertDate = dtoDate -> {
 		LocalDate localDate = dtoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		String dateStr = formatter.format(localDate);
 		TemporalAccessor is = formatter.parse(dateStr);

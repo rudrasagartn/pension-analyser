@@ -13,9 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomExceptionAdvice extends ResponseEntityExceptionHandler {
 
-	public CustomExceptionAdvice() {
-	}
-	
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<Object> handelRuntimeException(RuntimeException e){
 
