@@ -4,17 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 import com.pfm.dto.NetAssetValueDTO;
 import com.pfm.model.NetAssetValue;
 
-@Repository
 public interface INetAssetValueDaoJdbcTemplate {
-
-	public List<NetAssetValueDTO> findByDate(String sql, Date navDate);
-
-	public NetAssetValueDTO findNAVforScheme(String sql, String schemeId, String date);
 
 	public List<NetAssetValueDTO> queryForList(String sql, Date navDate);
 

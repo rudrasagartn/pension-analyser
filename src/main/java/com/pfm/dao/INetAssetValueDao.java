@@ -7,9 +7,4 @@ import com.pfm.model.NetAssetValue;
 
 public interface INetAssetValueDao extends JpaRepository<NetAssetValue, NAVCompositeKey> {
 
-	/*
-	 * @Query("from NetAssetValue nav where nav.navCompositeKey.navDate= :date")
-	 * List<NetAssetValue> findByNavCompositeKey_NavDate(@Param("date") Date date);
-	 */
-
 }

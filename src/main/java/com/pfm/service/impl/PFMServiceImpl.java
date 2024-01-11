@@ -36,16 +36,13 @@ public class PFMServiceImpl implements IPFMService {
 	
 	@Override
 	public List<PensionFundManager> save2(List<PensionFundManager> pfmDtoList) {
-		//List<PensionFundManager> list = convertToModels.apply(pfmDtoList);
 		return  dao.saveAll(pfmDtoList);
-		//return pfmDtoList.size() == responseList.size();
 	}
 	
 
 	@Override
 	public List<PensionFundManagerDTO> getAll() {
 		return daoCustom.queryForList(environment.getProperty("pfm.findAll"));
-		//return convertToDtos.apply(dao.findAll());
 	}
 
 	@Override

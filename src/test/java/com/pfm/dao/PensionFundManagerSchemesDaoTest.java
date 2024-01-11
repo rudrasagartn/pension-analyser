@@ -13,7 +13,7 @@ import com.pfm.model.PensionFundManager;
 import com.pfm.model.PensionFundManagerSchemes;
 
 @DataJpaTest
-public class PensionFundManagerSchemesDaoTest {
+class PensionFundManagerSchemesDaoTest {
 	
 	@Autowired
 	IPensionFundManagerSchemesDAO dao;
@@ -22,7 +22,7 @@ public class PensionFundManagerSchemesDaoTest {
 	IPensionFundManagerDao pfmDao;
 	
 	@Test
-	public void givenListOfPFMSchemes_whenGetAllInvoked_thenReturnListOfPFMSchemes() {
+	void givenListOfPFMSchemes_whenGetAllInvoked_thenReturnListOfPFMSchemes() {
 		
 		//given ( preconditions / setup )
 		PensionFundManager pfm = new PensionFundManager("SM01", "Aditya Birla Sunlife Pension Management Limited");

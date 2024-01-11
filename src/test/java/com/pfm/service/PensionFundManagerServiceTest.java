@@ -20,7 +20,7 @@ import com.pfm.service.impl.PFMServiceImpl;
  *
  */
 @ExtendWith(SpringExtension.class)
-public class PensionFundManagerServiceTest {
+class PensionFundManagerServiceTest {
 	
 	@InjectMocks
 	PFMServiceImpl pfmServiceImpl;
@@ -36,7 +36,7 @@ public class PensionFundManagerServiceTest {
 	
 	
 	@Test
-	public void givenPFMInstance_whenFindByNameInvoked_thenReturnPFMInstance() {
+	void givenPFMInstance_whenFindByNameInvoked_thenReturnPFMInstance() {
 		//given ( preconditions / setup )
 
 		PensionFundManagerDTO dto = new PensionFundManagerDTO("SM001","SBI Pension Funds Private Limited");

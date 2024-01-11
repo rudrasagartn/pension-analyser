@@ -20,7 +20,7 @@ import com.pfm.model.PensionFundManager;
 
 @DataJpaTest
 @PropertySources({ @PropertySource("config.properties"), @PropertySource("queries.properties") })
-public class PensionFundManagerDaoTest {
+class PensionFundManagerDaoTest {
 
 	@Autowired
 	IPensionFundManagerDao dao;

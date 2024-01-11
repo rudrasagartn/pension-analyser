@@ -15,8 +15,6 @@ public class ResponsePFM {
 	 * public void setData(PFMResponse data) { this.data = data; }
 	 */
 
-	List < PFMResponse > data = new ArrayList < PFMResponse > ();
+	List<PFMResponse> data = new ArrayList<>();
 
-	
-	
 }

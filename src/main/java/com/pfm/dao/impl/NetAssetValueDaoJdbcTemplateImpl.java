@@ -26,18 +26,17 @@ public class NetAssetValueDaoJdbcTemplateImpl implements INetAssetValueDaoJdbcTe
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	@Override
-	public List<NetAssetValueDTO> findByDate(String sql, Date navDate) {
-		logInfo(sql, navDate+"");
-		return jdbcTemplate.query(sql, rowMapper, navDate);
-	}
-
+	/*
+	 * @Override public List<NetAssetValueDTO> findByDate(String sql, Date navDate)
+	 * { logInfo(sql, navDate+""); return jdbcTemplate.query(sql, rowMapper,
+	 * navDate); }
+	 
 	@Override
 	public NetAssetValueDTO findNAVforScheme(String sql, String schemeId, String date) {
 		logInfo(sql, schemeId, date);
 		return jdbcTemplate.query(sql, rowMapper, date, schemeId).stream().findFirst().orElseThrow(
 				() -> new ResourceNotFoundException(schemeId + ":" + date + ":" + HttpStatus.NOT_FOUND.toString()));
-	}
+	}*/
 
 	@Override
 	public List<NetAssetValueDTO> queryForList(String sql, Date navDate) {
