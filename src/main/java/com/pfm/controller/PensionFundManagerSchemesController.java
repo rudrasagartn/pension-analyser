@@ -1,10 +1,13 @@
 package com.pfm.controller;
 
+import static com.pfm.util.UrlConstants.base;
+import static com.pfm.util.UrlConstants.schemes;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,16 +17,23 @@ import com.pfm.converter.IPFMSchemeConverter;
 import com.pfm.dto.PensionFundManagerSchemesDTO;
 import com.pfm.service.IPensionFundManagerSchemesService;
 
+import jakarta.validation.constraints.Size;
+
 @RestController
 @RequestMapping("/nps/pfms")
+@Validated
 public class PensionFundManagerSchemesController extends BaseController implements IPFMSchemeConverter {
 
-	@Autowired
-	IPensionFundManagerSchemesService iPFMSService;
+	private IPensionFundManagerSchemesService iPFMSService;
+
+	public PensionFundManagerSchemesController(IPensionFundManagerSchemesService iPFMSService) {
+		super();
+		this.iPFMSService = iPFMSService;
+	}
 
 	@GetMapping("/getPFMSchemes")
 	public ResponseEntity<Boolean> getPFMSchemes() {
-		String url = getURL("base") + getURL("schemes");
+		String url = getURL(base) + getURL(schemes);
 		List<PensionFundManagerSchemesDTO> schemesDTOList = getPFMSchemeData(url, restTemplate);
 		Boolean response = iPFMSService.save(schemesDTOList);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -44,20 +54,22 @@ public class PensionFundManagerSchemesController extends BaseController implemen
 	}
 
 	@GetMapping("/getByName")
-	public ResponseEntity<PensionFundManagerSchemesDTO> getByName(@RequestParam String pfmsName) {
+	public ResponseEntity<PensionFundManagerSchemesDTO> getByName(
+			@RequestParam @Size(min = 3, message = "Minimum length for this is 3") String pfmsName) {
 		PensionFundManagerSchemesDTO dto = iPFMSService.findByName(pfmsName);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	@GetMapping("/getByNameLike")
-	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getByNameLike(@RequestParam String pfmsName) {
+	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getByNameLike(
+			@RequestParam @Size(min = 3, message = "Minimum length for this is 3") String pfmsName) {
 		List<PensionFundManagerSchemesDTO> dtos = iPFMSService.findByNameLike(pfmsName);
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 
 	@GetMapping("/getSchemesByFundManagerName")
 	public ResponseEntity<List<PensionFundManagerSchemesDTO>> getSchemesByFundManagerName(
-			@RequestParam String pfmsName) {
+			@RequestParam @Size(min = 3, message = "Minimum length for this is 3") String pfmsName) {
 		List<PensionFundManagerSchemesDTO> dtos = iPFMSService.findSchemesByFundManagerName(pfmsName);
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}

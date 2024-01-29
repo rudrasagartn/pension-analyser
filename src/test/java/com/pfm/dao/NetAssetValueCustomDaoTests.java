@@ -22,7 +22,7 @@ import com.pfm.model.NAVCompositeKey;
 import com.pfm.model.NetAssetValue;
 
 @DataJpaTest
-public class NetAssetValueCustomDaoTests {
+class NetAssetValueCustomDaoTests {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;

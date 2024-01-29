@@ -11,13 +11,12 @@ public class BaseController {
 	@Autowired
 	protected RestTemplate restTemplate;
 
-	public String getURL(String key) {
-		return env.getProperty(key);
+	public String getURL(Enum<?> key) {
+		return env.getProperty(key.toString());
 	}
 
-	public BaseController() {
+	BaseController() {
 		super();
-
 	}
 
 }

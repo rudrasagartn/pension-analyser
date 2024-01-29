@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+
+import static com.pfm.util.UrlConstants.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +44,11 @@ public class ImportDataController extends BaseController implements IImportDataC
 	public void importData2() {
 		log.info("Import data started");
 		long start = System.currentTimeMillis();
-		String baseUrl = getURL("base");
+		String baseUrl = getURL(base);
 
-		String pfmsURL = baseUrl + getURL("pfms");
-		String pfmSchemeURL = baseUrl + getURL("schemes");
-		String navURL = baseUrl + getURL("latest");
+		String pfmsURL = baseUrl + getURL(pfms);
+		String pfmSchemeURL = baseUrl + getURL(schemes);
+		String navURL = baseUrl + getURL(latest);
 
 		CompletableFuture<List<PensionFundManager>> pfmModelList = importService.invokePBServiceForPFMData(pfmsURL,
 				restTemplate);
