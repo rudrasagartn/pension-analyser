@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @ToString
+@Builder(builderClassName = "Builder" , toBuilder = true)
 @Entity(name = "pfm")
 public class PensionFundManager {
 
